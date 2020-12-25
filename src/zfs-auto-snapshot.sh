@@ -194,10 +194,16 @@ do_snapshots () # properties, flags, snapname, oldglob, [targets...]
 			fi
 		fi
 
-		# Retain at most $opt_keep number of old snapshots of this filesystem,
-		# including the one that was just recently created.
-		test -z "$opt_keep" && continue
-		KEEP="$opt_keep"
+		# Use the number specified on the property, if it exists and is valid
+		KEEP=`zfs get -Hp -o value com.sun:auto-snapshot:$opt_label:keep $ii`
+
+		if ! test "$KEEP" -gt '0' 2>/dev/null
+		then
+			# Retain at most $opt_keep number of old snapshots of this filesystem,
+			# including the one that was just recently created.
+			test -z "$opt_keep" && continue
+			KEEP="$opt_keep"
+		fi
 
 		# ASSERT: The old snapshot list is sorted by increasing age.
 		for jj in $SNAPSHOTS_OLD
