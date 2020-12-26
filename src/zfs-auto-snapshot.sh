@@ -26,7 +26,7 @@ IFS="
 # Set default program options.
 opt_backup_full=''
 opt_backup_incremental=''
-opt_default_exclude=''
+opt_default_exclude='1'
 opt_dry_run=''
 opt_event='-'
 opt_fast_zfs_list=''
@@ -42,7 +42,7 @@ opt_verbose='0'
 opt_pre_snapshot=''
 opt_post_snapshot=''
 opt_do_snapshots=1
-opt_min_size=0
+opt_min_size=1
 
 # Global summary statistics.
 DESTRUCTION_COUNT='0'
