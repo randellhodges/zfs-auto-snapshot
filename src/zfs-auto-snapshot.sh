@@ -171,10 +171,7 @@ do_snapshots () # properties, flags, snapname, oldglob, [targets...]
 			if [ "$kb_written" -lt "$opt_min_size" ]
 			then
 				size_check_skip=1
-				if [ $opt_verbose -gt 0 ]
-				then
-					echo "Skipping target $ii, only $kb_written kB written since last snap. opt_min_size is $opt_min_size"
-				fi
+				print_log info "Skipping target $ii, only $kb_written kB written since last snap. opt_min_size is $opt_min_size"
 			fi
 		fi
 
