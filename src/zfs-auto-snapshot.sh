@@ -38,7 +38,7 @@ opt_sep='_'
 opt_setauto=''
 opt_syslog=''
 opt_skip_scrub=''
-opt_verbose=''
+opt_verbose='0'
 opt_pre_snapshot=''
 opt_post_snapshot=''
 opt_do_snapshots=1
@@ -111,7 +111,7 @@ print_log () # level, message, ...
 			;;
 		(inf*)
 			# test -n "$opt_syslog" && logger -t "$opt_prefix" -p daemon.info $*
-			test -z "$opt_quiet" && test -n "$opt_verbose" && echo $*
+			test -z "$opt_quiet" && [ $opt_verbose -gt 0 ]   && echo $*
 			;;
 		(deb*)
 			# test -n "$opt_syslog" && logger -t "$opt_prefix" -p daemon.debug $*
@@ -162,23 +162,23 @@ do_snapshots () # properties, flags, snapname, oldglob, [targets...]
 
 	for ii in $TARGETS
 	do
-                # Check if size check is > 0
-                size_check_skip=0
-                if [ "$opt_min_size" -gt 0 ]
-                then
-                        bytes_written=`zfs get -Hp -o value written $ii`
-                        kb_written=$(( $bytes_written / 1024 ))
-                        if [ "$kb_written" -lt "$opt_min_size" ]
-                        then
-                                size_check_skip=1
-                                if [ $opt_verbose -gt 0 ]
-                                then
-                                        echo "Skipping target $ii, only $kb_written kB written since last snap. opt_min_size is $opt_min_size"
-                                fi
-                        fi
-                fi
+		# Check if size check is > 0
+ 		size_check_skip=0
+		if [ "$opt_min_size" -gt 0 ]
+		then
+			bytes_written=`zfs get -Hp -o value written $ii`
+			kb_written=$(( $bytes_written / 1024 ))
+			if [ "$kb_written" -lt "$opt_min_size" ]
+			then
+				size_check_skip=1
+				if [ $opt_verbose -gt 0 ]
+				then
+					echo "Skipping target $ii, only $kb_written kB written since last snap. opt_min_size is $opt_min_size"
+				fi
+			fi
+		fi
 
-                if [ -n "$opt_do_snapshots" -a "$size_check_skip" -eq 0 ]
+		if [ -n "$opt_do_snapshots" -a "$size_check_skip" -eq 0 ]
 		then
 			if [ "$opt_pre_snapshot" != "" ]
 			then
@@ -323,7 +323,7 @@ do
 		(-q|--quiet)
 			opt_debug=''
 			opt_quiet='1'
-			opt_verbose=''
+			opt_verbose='0'
 			shift 1
 			;;
 		(-r|--recursive)
