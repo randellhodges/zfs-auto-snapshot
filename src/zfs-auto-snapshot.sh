@@ -26,7 +26,7 @@ IFS="
 # Set default program options.
 opt_backup_full=''
 opt_backup_incremental=''
-opt_default_exclude='1'
+opt_default_exclude=''
 opt_dry_run=''
 opt_event='-'
 opt_fast_zfs_list=''
@@ -38,11 +38,18 @@ opt_sep='_'
 opt_setauto=''
 opt_syslog=''
 opt_skip_scrub=''
-opt_verbose='0'
+opt_verbose=''
 opt_pre_snapshot=''
 opt_post_snapshot=''
 opt_do_snapshots=1
-opt_min_size=1
+opt_min_size=0
+
+# Allow override defaults. As suggested by
+# https://github.com/zfsonlinux/zfs-auto-snapshot/issues/106
+if [ -e /etc/default/zfs-auto-snapshot ]
+then
+	. /etc/default/zfs-auto-snapshot
+fi
 
 # Global summary statistics.
 DESTRUCTION_COUNT='0'
