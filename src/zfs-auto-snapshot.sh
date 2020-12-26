@@ -111,7 +111,7 @@ print_log () # level, message, ...
 			;;
 		(inf*)
 			# test -n "$opt_syslog" && logger -t "$opt_prefix" -p daemon.info $*
-			test -z "$opt_quiet" && [ $opt_verbose -gt 0 ]   && echo $*
+			test -z "$opt_quiet" && test -n "$opt_verbose" && echo Info: $*
 			;;
 		(deb*)
 			# test -n "$opt_syslog" && logger -t "$opt_prefix" -p daemon.debug $*
@@ -168,7 +168,6 @@ do_snapshots () # properties, flags, snapname, oldglob, [targets...]
 		then
 			bytes_written=`zfs get -Hp -o value written $ii`
 			kb_written=$(( $bytes_written / 1024 ))
-			print_log debug "Target: $ii, written: $kb_written, threshold: $opt_min_size"
 			if [ "$kb_written" -lt "$opt_min_size" ]
 			then
 				size_check_skip=1
@@ -321,7 +320,7 @@ do
 		(-q|--quiet)
 			opt_debug=''
 			opt_quiet='1'
-			opt_verbose='0'
+			opt_verbose=''
 			shift 1
 			;;
 		(-r|--recursive)
