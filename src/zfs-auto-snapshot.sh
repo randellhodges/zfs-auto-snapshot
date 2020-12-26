@@ -168,6 +168,7 @@ do_snapshots () # properties, flags, snapname, oldglob, [targets...]
 		then
 			bytes_written=`zfs get -Hp -o value written $ii`
 			kb_written=$(( $bytes_written / 1024 ))
+			print_log debug "Target: $ii, written: $kb_written, threshold: $opt_min_size"
 			if [ "$kb_written" -lt "$opt_min_size" ]
 			then
 				size_check_skip=1
